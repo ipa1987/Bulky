@@ -1,8 +1,12 @@
+using BulkyWeb.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 //Register Syncfusion license https://help.syncfusion.com/common/essential-studio/licensing/how-to-generate
-//Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("YOUR LICENSE KEY");
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["LicenceKey"]);
 
 // Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 if (Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"node_modules", @"@syncfusion")))
 {
