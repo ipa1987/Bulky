@@ -1,4 +1,4 @@
-using BulkyWeb.Data;
+using Bulky.DataAccess.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 //Register Syncfusion license https://help.syncfusion.com/common/essential-studio/licensing/how-to-generate

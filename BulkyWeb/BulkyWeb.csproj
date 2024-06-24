@@ -17,7 +17,11 @@
            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
          </PackageReference>
          <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-         <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="26.1.35" />
+         <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="26.1.38" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bulky.DataAccess\Bulky.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
