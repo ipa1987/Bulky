@@ -1,16 +1,23 @@
 ﻿using Bulky.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Bulky.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
 
-        public ApplicationDbContext(IConfiguration configuration)
+        //public ApplicationDbContext(IConfiguration configuration)
+        //{
+        //    this.configuration = configuration;
+        //}
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            this.configuration = configuration;
+            
         }
 
         public DbSet<Category> Categories { get; set; }
@@ -19,6 +26,8 @@ namespace Bulky.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action", DisplayOrder = "1" },
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = "2" },
@@ -111,7 +120,7 @@ namespace Bulky.DataAccess.Data
                 });
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-          => optionsBuilder.UseNpgsql(configuration.GetConnectionString("postgres"));
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //  => optionsBuilder.UseNpgsql(configuration.GetConnectionString("postgres"));
     }
 }
