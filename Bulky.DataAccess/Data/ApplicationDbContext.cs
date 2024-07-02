@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Bulky.DataAccess.Data
 {
@@ -23,6 +22,8 @@ namespace Bulky.DataAccess.Data
 
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<Company> Companies { get; set; }
+
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,6 +35,30 @@ namespace Bulky.DataAccess.Data
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = "2" },
                 new Category { Id = 3, Name = "History", DisplayOrder = "3" }
             );
+
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                    Id = 1,
+                    Name = "Tech Solution",
+                    StreetAddress = "123 Tech St.",
+                    City = "Tech City",
+                    PostalCode = "12345",
+                    State = "IL",
+                    PhoneNumber = "7779998008",
+
+                },
+                new Company
+                {
+                    Id = 2,
+                    Name = "Vivant",
+                    StreetAddress = "999 Viv St.",
+                    City = "Vid City",
+                    PostalCode = "34567",
+                    State = "NY",
+                    PhoneNumber = "6669998008",
+                    
+                });
             modelBuilder.Entity<Product>().HasData(
                 new Product
                 {
