@@ -23,6 +23,7 @@ namespace Bulky.DataAccess.Data
         public DbSet<Product> Products { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
@@ -46,7 +47,6 @@ namespace Bulky.DataAccess.Data
                     PostalCode = "12345",
                     State = "IL",
                     PhoneNumber = "7779998008",
-
                 },
                 new Company
                 {
@@ -57,7 +57,6 @@ namespace Bulky.DataAccess.Data
                     PostalCode = "34567",
                     State = "NY",
                     PhoneNumber = "6669998008",
-                    
                 });
             modelBuilder.Entity<Product>().HasData(
                 new Product
