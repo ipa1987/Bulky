@@ -80,8 +80,13 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
             ShoppingCartViewModel.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
 
-            ShoppingCartViewModel.OrderHeader.OrderDate = DateTime.Now.ToUniversalTime();
+            // Ensure OrderHeader is initialized
+            if (ShoppingCartViewModel.OrderHeader == null)
+            {
+                ShoppingCartViewModel.OrderHeader = new OrderHeader();
+            }
 
+            ShoppingCartViewModel.OrderHeader.OrderDate = DateTime.Now.ToUniversalTime();
             ShoppingCartViewModel.OrderHeader.ApplicationUserId = userId;
 
             ApplicationUser applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
@@ -100,7 +105,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             }
             else
             {
-                // it is a company user
+                // It is a company user
                 ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
                 ShoppingCartViewModel.OrderHeader.OrderStatus = SD.StatusApproved;
             }
@@ -124,14 +129,13 @@ namespace BulkyWeb.Areas.Customer.Controllers
             {
                 // It's a regular customer and need to capture payment
                 // stripe logic
-                var domain = "https://localhost:7113/";
+                var domain = "https://localhost:7113";
 
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"/customer/cart/OrderConfirmation?id={ShoppingCartViewModel.OrderHeader.Id}",
                     CancelUrl = domain + "/customer/cart/index",
                     LineItems = new List<SessionLineItemOptions>(),
-
                     Mode = "payment",
                 };
 
@@ -168,7 +172,30 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
         public IActionResult OrderConfirmation(int id)
         {
+            // Fetch the order header
             OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+
+            // Check if orderHeader is null
+            if (orderHeader == null)
+            {
+                // Handle the null case appropriately
+                return NotFound();
+            }
+
+            // Initialize the ShoppingCartViewModel if it is null
+            if (ShoppingCartViewModel == null)
+            {
+                ShoppingCartViewModel = new ShoppingCartViewModel();
+            }
+
+            // Initialize the OrderHeader in ShoppingCartViewModel if it is null
+            if (ShoppingCartViewModel.OrderHeader == null)
+            {
+                ShoppingCartViewModel.OrderHeader = new OrderHeader();
+            }
+
+            // Update the ShoppingCartViewModel.OrderHeader with the orderHeader from the database
+            ShoppingCartViewModel.OrderHeader = orderHeader;
 
             if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
             {
@@ -178,7 +205,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
                 if (session.PaymentStatus.ToLower() == "paid")
                 {
-                    _unitOfWork.OrderHeader.UpdateStripePaymentID(ShoppingCartViewModel.OrderHeader.Id, session.Id, session.PaymentIntentId);
+                    _unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
                     _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     _unitOfWork.Save();
                 }
