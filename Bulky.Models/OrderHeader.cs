@@ -31,6 +31,8 @@ namespace Bulky.Models
         // DateOnly introduced from .net 8 - use DateTime for older versions
         public DateOnly DateDueDate { get; set; }
 
+        public string? SessionId { get; set; }
+
         public string? PaymentIntentId { get; set; }
 
         [Required]

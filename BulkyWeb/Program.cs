@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Bulky.Utility;
 using Stripe;
+using File = System.IO.File;
 
 var builder = WebApplication.CreateBuilder(args);
 //Register Syncfusion license https://help.syncfusion.com/common/essential-studio/licensing/how-to-generate
