@@ -110,21 +110,23 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             public string? Role { get; set; }
+
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
 
             [Required]
             public string Name { get; set; }
+
             public string? StreetAddress { get; set; }
             public string? City { get; set; }
             public string? State { get; set; }
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
             public int? CompanyId { get; set; }
+
             [ValidateNever]
             public IEnumerable<SelectListItem> CompanyList { get; set; }
         }
-
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -185,10 +187,11 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    if (String.IsNullOrEmpty(Input.Role)) 
-                    { 
+                    if (String.IsNullOrEmpty(Input.Role))
+                    {
                         await _userManager.AddToRoleAsync(user, Input.Role);
-                    } else
+                    }
+                    else
                     {
                         await _userManager.AddToRoleAsync(user, SD.Role_Customer);
                     }
@@ -211,7 +214,14 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (User.IsInRole(SD.Role_Admin))
+                        {
+                            TempData["Success"] = "New user created successfully";
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
                         return LocalRedirect(returnUrl);
                     }
                 }
