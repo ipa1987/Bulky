@@ -84,11 +84,11 @@ namespace BulkyWeb.Areas.Admin.Controllers
                         string finalPath = Path.Combine(wwwRootPath, productPath);
 
                         if (!Directory.Exists(finalPath))
-                        {
-                            Directory.CreateDirectory(finalPath);
-                        }
 
-                        using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                            Directory.CreateDirectory(finalPath);
+
+
+                        using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
                         {
                             file.CopyTo(fileStream);
                         }
@@ -100,10 +100,11 @@ namespace BulkyWeb.Areas.Admin.Controllers
                         };
 
                         if (productVM.Product.ProductImages == null)
-                        {
+
                             productVM.Product.ProductImages = new List<ProductImage>();
-                        }
+
                         productVM.Product.ProductImages.Add(productImage);
+                    
                         _unitOfWork.ProductImage.Add(productImage);
                     }
 
